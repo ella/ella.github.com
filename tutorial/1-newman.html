@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Newman - Ella’s admin &mdash; Python v1.0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python v1.0.0.0 documentation" href="../index.html" />
+    <link rel="next" title="Basic templates" href="2-templates.html" />
+    <link rel="prev" title="Setting up Ella" href="0-setup.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="2-templates.html" title="Basic templates"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="0-setup.html" title="Setting up Ella"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Python v1.0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="newman-ella-s-admin">
+<span id="tutorial-1"></span><h1>Newman - Ella&#8217;s admin<a class="headerlink" href="#newman-ella-s-admin" title="Permalink to this headline">¶</a></h1>
+<p>Now when we have a working project from the previous parts of the tutorial, we
+need to actually create the site in the admin interface. While we are there we
+will also create an article - our very first blog post so that we can actually
+have something to work with in our templates in the next step of the tutorial.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are impatient to start, just play around with the admin to create
+one instance of <tt class="docutils literal"><span class="pre">ella.core.models.Category</span></tt> to get the root of the web
+working and then one <tt class="docutils literal"><span class="pre">ella.articles.models.Article</span></tt> published in that
+category (you might need to create additional model like <tt class="docutils literal"><span class="pre">Author</span></tt> on the
+way).</p>
+</div>
+<p>First we need some theory on how Ella handles sites, categories and published
+objects.</p>
+<div class="section" id="ella-sites-and-categories">
+<h2>Ella sites and categories<a class="headerlink" href="#ella-sites-and-categories" title="Permalink to this headline">¶</a></h2>
+<p>Ella was designed to server several sites from a single database. It does so by
+using Django&#8217;s built-in <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/contrib/sites/">sites framework</a>. The <tt class="docutils literal"><span class="pre">sites</span></tt> app creates a default
+<tt class="docutils literal"><span class="pre">Site</span></tt> called <tt class="docutils literal"><span class="pre">example.com</span></tt> during the syncdb. Just rename the domain name
+to relevant value and you will have an ella site, just empty.</p>
+<p>Within sites, Ella organizes content into categories. Categories (instances of
+<tt class="docutils literal"><span class="pre">ella.core.models.Category</span></tt>) are organized in a tree for each site. Every
+site needs to have exactly one what we call <cite>root category</cite> - a category
+without a parent. This category then represents the root of the web (<tt class="docutils literal"><span class="pre">/</span></tt>).</p>
+<p>Categories are represented by their <tt class="docutils literal"><span class="pre">tree_path</span></tt> - a path of <tt class="docutils literal"><span class="pre">slugs</span></tt> from
+root category, for example with categories layout:</p>
+<div class="highlight-python"><pre>Ella Blog
+    About
+    Technology
+        Concepts
+        Django
+            Django applications
+        Typical deployment env</pre>
+</div>
+<p>the <tt class="docutils literal"><span class="pre">tree_path</span></tt> values would be:</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Category</th>
+<th class="head">tree_path</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Ella Blog</td>
+<td>&nbsp;</td>
+</tr>
+<tr><td>About</td>
+<td>about</td>
+</tr>
+<tr><td>Technology</td>
+<td>technology</td>
+</tr>
+<tr><td>Concepts</td>
+<td>technology/concepts</td>
+</tr>
+<tr><td>Django</td>
+<td>technology/django</td>
+</tr>
+<tr><td>Django applications</td>
+<td>technology/django/django-applications</td>
+</tr>
+<tr><td>Typical deployment env</td>
+<td>technology/typical-deployment-env</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">Category</span></tt>&#8216;s URL is it&#8217;s <tt class="docutils literal"><span class="pre">tree_path</span></tt> (which is what makes the root category
+the root of the site) and every post in Ella belongs to one or more categories,
+nothing should exist outside of the category tree.</p>
+</div>
+<div class="section" id="publishable-and-placement">
+<h2><tt class="docutils literal"><span class="pre">Publishable</span></tt> and <tt class="docutils literal"><span class="pre">Placement</span></tt><a class="headerlink" href="#publishable-and-placement" title="Permalink to this headline">¶</a></h2>
+<p>Basic function of Ella is publishing content. Ella itself provides several
+types of content (<tt class="docutils literal"><span class="pre">Article</span></tt>, <tt class="docutils literal"><span class="pre">Gallery</span></tt>, <tt class="docutils literal"><span class="pre">Quiz</span></tt>, ...) and can be easily
+extended to add more (just define the model) or used with existing models.</p>
+<p>For ease of manipulation and efficiency all content models inherit from
+<tt class="docutils literal"><span class="pre">ella.core.models.Publishable</span></tt>. This base class has all the fields needed to
+display a listing of the content object (<tt class="docutils literal"><span class="pre">title</span></tt>, <tt class="docutils literal"><span class="pre">description</span></tt>, <tt class="docutils literal"><span class="pre">slug</span></tt>,
+<tt class="docutils literal"><span class="pre">photo</span></tt>), basic metadata (<tt class="docutils literal"><span class="pre">category</span></tt>, <tt class="docutils literal"><span class="pre">authors</span></tt>, <tt class="docutils literal"><span class="pre">source</span></tt>) and provides
+easy access (property <tt class="docutils literal"><span class="pre">target</span></tt>) to the actual instance of the proper class if
+needed (it holds a reference to it&#8217;s <tt class="docutils literal"><span class="pre">ContentType</span></tt>).</p>
+<p>By creating a <tt class="docutils literal"><span class="pre">Publishable</span></tt> object alone, the object is not published - it
+has no URL and cannot be accessed from the frontend. To do that we need to
+create a <tt class="docutils literal"><span class="pre">Placement</span></tt> for it.</p>
+<p><tt class="docutils literal"><span class="pre">Placement</span></tt> object represents the actual act of publishing - it defines a URL
+and the time for which the published object will be accessible. There are two
+types of <tt class="docutils literal"><span class="pre">Placement</span></tt> with slightly different use cases:</p>
+<blockquote>
+<ul>
+<li><p class="first"><em>time-based</em> has URL containing the date of publishing and should be used
+for objects that have some relevance to date (most of the content
+presumably since Ella was designed to power magazines and news sites).
+The URL of an object published by time-based <tt class="docutils literal"><span class="pre">Placement</span></tt> will look
+like:</p>
+<div class="highlight-python"><pre>/category/tree/path/YEAR/MONTH/DAY/content_type_name/slug/</pre>
+</div>
+<p>so for example:</p>
+<div class="highlight-python"><pre>/about/2007/08/11/articles/ella-first-in-production/</pre>
+</div>
+</li>
+<li><p class="first"><em>static</em> <tt class="docutils literal"><span class="pre">Placement</span></tt> has no date in it&#8217;s URL and should be used for
+objects with universal validity. Since the absence of date limits the
+namespace for such objects we do not recommend using those for large
+amount of objects. URL of static placements contain word &#8216;static&#8217; instead
+of the date information:</p>
+<div class="highlight-python"><pre>/category/tree/path/static/content_type_name/slug/</pre>
+</div>
+</li>
+</ul>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">content_type_name</span></tt> in the URL schema represents slugified translated version
+of the model&#8217;s <tt class="docutils literal"><span class="pre">verbose_name_plural</span></tt>.</p>
+<p>Creating a <tt class="docutils literal"><span class="pre">Placement</span></tt> for some <tt class="docutils literal"><span class="pre">Publishable</span></tt> object makes it visible
+(starting from <tt class="docutils literal"><span class="pre">publish_from</span></tt>) but doesn&#8217;t make it appear in any listing in
+any <tt class="docutils literal"><span class="pre">Category</span></tt>. For that you need to specify in which categories you want it
+listed.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The distinction between a <tt class="docutils literal"><span class="pre">Publishable</span></tt> object, it&#8217;s <tt class="docutils literal"><span class="pre">Placement</span></tt> and
+<tt class="docutils literal"><span class="pre">Listing</span></tt> is hidden in the admin interface where everything is presented to
+the user in one form. It is an implementation detail whose understanding helps
+with understanding Ella&#8217;s capabilities and limitations.</p>
+</div>
+</div>
+<div class="section" id="listing">
+<h2><tt class="docutils literal"><span class="pre">Listing</span></tt><a class="headerlink" href="#listing" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">ella.core.models.Listing</span></tt> instances carry the information on which
+<tt class="docutils literal"><span class="pre">Placements</span></tt> (since an object can have multiple <tt class="docutils literal"><span class="pre">Placements</span></tt> in multiple
+categories on multiplu sites, <tt class="docutils literal"><span class="pre">Listing</span></tt> binds to the <tt class="docutils literal"><span class="pre">Placement</span></tt> and not to
+the object directly) should be listed in which <tt class="docutils literal"><span class="pre">Category</span></tt> and when - it
+enables users to list the object in as many categories as they wish at
+arbitrary times (but not sooner that the <tt class="docutils literal"><span class="pre">Placement.publish_from</span></tt>).</p>
+<p>By default listings in the root category only contain <tt class="docutils literal"><span class="pre">Listings</span></tt> specifically
+targeted there whereas listings for any subcategory also contains all the
+listings of it&#8217;s subcategories. This is a model we found most usefull when
+working with large sites where the site&#8217;s homepage needs to be controlled
+closely by editors and the interrim categories only serve as aggregators of all
+the content published in them either directly or via a subcategory.</p>
+</div>
+<div class="section" id="creating-a-site">
+<h2>Creating a site<a class="headerlink" href="#creating-a-site" title="Permalink to this headline">¶</a></h2>
+<p>Now you should have anough information to be able to start exploring Ella&#8217;s
+admin (found on <tt class="docutils literal"><span class="pre">/newman/</span></tt>) and create your own site and it&#8217;s first post. You
+will know that you were succesfull if you manage to create and publish an
+article whose URL gives you a <tt class="docutils literal"><span class="pre">TemplateDoesNotExist</span></tt> exception upon accessing
+- that means we are ready to <a class="reference external" href="2-templates.html#tutorial-2"><em>create some templates</em></a> which is the last thing we
+need to get our site running.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Newman - Ella&#8217;s admin</a><ul>
+<li><a class="reference external" href="#ella-sites-and-categories">Ella sites and categories</a></li>
+<li><a class="reference external" href="#publishable-and-placement"><tt class="docutils literal"><span class="pre">Publishable</span></tt> and <tt class="docutils literal"><span class="pre">Placement</span></tt></a></li>
+<li><a class="reference external" href="#listing"><tt class="docutils literal"><span class="pre">Listing</span></tt></a></li>
+<li><a class="reference external" href="#creating-a-site">Creating a site</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="0-setup.html"
+                                  title="previous chapter">Setting up Ella</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="2-templates.html"
+                                  title="next chapter">Basic templates</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/tutorial/1-newman.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="2-templates.html" title="Basic templates"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="0-setup.html" title="Setting up Ella"
+             >previous</a> |</li>
+        <li><a href="../index.html">Python v1.0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Centrum Holdings.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

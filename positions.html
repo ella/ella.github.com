@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Positions &mdash; Python v1.0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Python v1.0.0.0 documentation" href="index.html" />
+    <link rel="prev" title="views" href="core/views.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="core/views.html" title="views"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Python v1.0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="positions">
+<span id="id1"></span><h1>Positions<a class="headerlink" href="#positions" title="Permalink to this headline">¶</a></h1>
+<p>Position as understood by this application is a part of the template with
+content specific for category in which the template is rendered. It allows
+designers to specify areas of the template to be overriden by the users via the
+admin interface. Position is identified by it&#8217;s name.</p>
+<p>Purpose of a position is primarilly to display objects in form of a box, but it
+can also be used to insert raw HTML into the template.</p>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p>Basic features:</p>
+<dl class="docutils">
+<dt><strong>inheritance</strong></dt>
+<dd>When called from the template tag, the application will first try and
+locate the active position for the given category, then, if such position
+is not available, it will locate active position in the closest ancestor of
+the category. This behavior can be overriden by the nofallback argument to
+the templatetag.</dd>
+<dt><strong>tied to objects or raw HTML</strong></dt>
+<dd>You can either define a generic foreign key to any object whose box you
+wish to display instead of the templatetag or, if the generic foreign key
+is empty, raw HTML that you wish to insert.</dd>
+<dt><strong>ifposition templatetag</strong></dt>
+<dd>You can check if any position for a given set of names is active using the
+ifposition templatetag.</dd>
+</dl>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>Position is defined in the admin interface and used from the templates via two
+templatetags.</p>
+<div class="section" id="position">
+<h3>{% position %}<a class="headerlink" href="#position" title="Permalink to this headline">¶</a></h3>
+<p>Render a given position for category.</p>
+<p>Syntax:</p>
+<div class="highlight-python"><pre>{% position POSITION_NAME for CATEGORY [using BOX_TYPE] [nofallback] %}
+  ...
+{% endposition %}</pre>
+</div>
+<p>Parameters:</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal"><span class="pre">POSITION_NAME</span></tt></td>
+<td>Name of the position to lookup</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">CATEGORY</span></tt></td>
+<td>The category for which to render the position -
+either a <tt class="docutils literal"><span class="pre">Category</span></tt> instance or category&#8217;s
+<tt class="docutils literal"><span class="pre">slug</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">BOX_TYPE</span></tt></td>
+<td>Default type of the box to use, can be overriden
+from the admin.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">nofallback</span></tt></td>
+<td>If present, do not fall back to parent categories</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>Text inside the tag (between <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">position</span> <span class="pre">%}</span></tt> and <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">endposition</span> <span class="pre">%}</span></tt>) is
+passed to <tt class="docutils literal"><span class="pre">Box</span></tt> used for rendering the object. This can also be overriden
+from the database.</p>
+</div>
+<div class="section" id="ifposition">
+<h3>{% ifposition %}<a class="headerlink" href="#ifposition" title="Permalink to this headline">¶</a></h3>
+<p>Render template according to the availability of given position names within
+given category.</p>
+<p>Syntax:</p>
+<div class="highlight-python"><pre>{% ifposition POSITION_NAME ... for CATEGORY [nofallback] %}
+  present
+{% else %}
+  not there
+{% endifposition %}</pre>
+</div>
+<p>Renders &#8216;present&#8217; if any of the space separated position name is active for the
+given category, &#8216;not there&#8217; otherwise.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Positions</a><ul>
+<li><a class="reference external" href="#features">Features</a></li>
+<li><a class="reference external" href="#usage">Usage</a><ul>
+<li><a class="reference external" href="#position">{% position %}</a></li>
+<li><a class="reference external" href="#ifposition">{% ifposition %}</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="core/views.html"
+                                  title="previous chapter">views</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/positions.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core/views.html" title="views"
+             >previous</a> |</li>
+        <li><a href="index.html">Python v1.0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Centrum Holdings.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

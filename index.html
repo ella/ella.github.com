@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ella CMS &mdash; Python v1.0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Python v1.0.0.0 documentation" href="" />
+    <link rel="next" title="Setting up Ella" href="tutorial/0-setup.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial/0-setup.html" title="Setting up Ella"
+             accesskey="N">next</a> |</li>
+        <li><a href="">Python v1.0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ella-cms">
+<h1>Ella CMS<a class="headerlink" href="#ella-cms" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="http://www.ellaproject.cz">Ella</a> is a Content Management System based on <a class="reference external" href="http://www.python.org/">Python</a> web framework <a class="reference external" href="http://www.djangoproject.com/">Django</a>.
+But for starting an application using Ella, only knowledge about adding Python
+modules to PYTHONPATH is essential.</p>
+<p>It is a set of Django applications designed to work together. Thus, for details
+on deployment and configuration please refer to <a class="reference external" href="http://docs.djangoproject.com/en/dev/">Django documentation</a>.</p>
+<p>For creating site using Ella, working knowledge of Django and its templating
+language is paramount. Rest is described in our <a class="reference external" href="tutorial/0-setup.html#tutorial-0"><em>tutorial</em></a>.</p>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p>The system currently consists of:</p>
+<p>Core application handling URLs, publication logic and provides all the tools for building content sites:</p>
+<blockquote>
+<ul class="simple">
+<li>URL patterns and according views defining templates</li>
+<li>mechanism for other application to inject themselves in the URL resolution</li>
+<li>box templatetag that can display object of any type via a common interface</li>
+<li>mechanism for publishing objects (defining URLs, listing objects in categories according to date and priorities)</li>
+<li>various caching tools</li>
+</ul>
+</blockquote>
+<p>Several content providing apps:</p>
+<blockquote>
+<ul class="simple">
+<li>photos app with automatic format generation</li>
+<li>articles</li>
+<li>galleries containing arbitrary number of objects of any type</li>
+<li>polls application that provides polls, quizes and contest models</li>
+<li>etc..</li>
+</ul>
+</blockquote>
+<p>Some tools to work with that content:</p>
+<blockquote>
+<ul class="simple">
+<li>admin interface with advanced UI (newman)</li>
+<li>comments (based on <a class="reference external" href="http://github.com/ericflo/django-threadedcomments">django-threadedcomments</a>) with threading and basic moderation</li>
+<li>ratings app (being extracted into <a class="reference external" href="http://github.com/ella/django-ratings">django-ratings</a>)</li>
+<li><a class="reference external" href="positions.html#positions"><em>Positions</em></a> - a tool for editors to define what object should be visible in positions pre-defined by template designer</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>Tutorial: <a class="reference external" href="tutorial/0-setup.html#tutorial-0"><em>Setting up Ella</em></a> | <a class="reference external" href="tutorial/1-newman.html#tutorial-1"><em>Newman - Ella&#8217;s admin</em></a> | <a class="reference external" href="tutorial/2-templates.html#tutorial-2"><em>Basic templates</em></a> | <a class="reference external" href="tutorial/3-boxes.html#tutorial-3"><em>Enhancing templates</em></a> | <a class="reference external" href="tutorial/4-deployment.html#tutorial-4"><em>Deploying your Ella application</em></a></p>
+<p>Reference: <a class="reference external" href="core/views.html#core-views"><em>views</em></a> | <a class="reference external" href="core/templatetags.html#core-templatetags"><em>templatetags</em></a></p>
+<p>Applications: <a class="reference external" href="positions.html#positions"><em>Positions</em></a></p>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>Ella is licensed under the BSD licence. It utilizes many conceps and examples
+from django itself, <a class="reference external" href="http://www.djangosnippets.org">djangosnippets</a> and several other open-source project. We
+would like to thank the community around Django for the huge amount of great
+quality code they share with other Djangonauts. We are proud to be part of that
+community and hope that somebody will find this project helpfull.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Ella CMS</a><ul>
+<li><a class="reference external" href="#features">Features</a></li>
+<li><a class="reference external" href="#documentation">Documentation</a></li>
+<li><a class="reference external" href="#license">License</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Next topic</h4>
+            <p class="topless"><a href="tutorial/0-setup.html"
+                                  title="next chapter">Setting up Ella</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/index.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial/0-setup.html" title="Setting up Ella"
+             >next</a> |</li>
+        <li><a href="">Python v1.0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Centrum Holdings.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

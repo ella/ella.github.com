@@ -1,0 +1,10 @@
+# Sphinx inventory version 1
+# Project: Python
+# Version: 1.0.0
+ella.core.templatetags.core mod core/templatetags.html
+ella.core.views mod core/views.html
+ella.core.templatetags.core.listing function core/templatetags.html
+ella.core.views.ObjectDetail class core/views.html
+ella.core.templatetags.core.do_box function core/templatetags.html
+ella.core.templatetags.core.do_render function core/templatetags.html
+ella.core.views.ListContentType class core/views.html

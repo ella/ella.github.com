@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Setting up Ella &mdash; Python v1.0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python v1.0.0.0 documentation" href="../index.html" />
+    <link rel="next" title="Newman - Ella’s admin" href="1-newman.html" />
+    <link rel="prev" title="Ella CMS" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="1-newman.html" title="Newman - Ella’s admin"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Ella CMS"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Python v1.0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="setting-up-ella">
+<span id="tutorial-0"></span><h1>Setting up Ella<a class="headerlink" href="#setting-up-ella" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial will guide you through the process of creating and deploying an
+Ella-based site. Since Ella is a CMS, we will create a blog. This first step
+will take us through setting up our environment, installing all the
+dependencies and creating the actual project. Before you dive into it, we
+suggest you go through the official <a class="reference external" href="http://docs.djangoproject.com/en/dev/intro/tutorial01/">Django tutorial</a> to get yourself familiar
+with Django since we will be relying on that.</p>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>We assume that <tt class="docutils literal"><span class="pre">python</span></tt>, <tt class="docutils literal"><span class="pre">setuptools</span></tt> and <tt class="docutils literal"><span class="pre">python-imaging</span></tt> (<tt class="docutils literal"><span class="pre">PIL</span></tt>) are
+installed on your system directly since they can be non-trivial to install the
+python way. We will be working with <a class="reference external" href="http://pip.openplans.org/">pip</a> and <a class="reference external" href="http://pypi.python.org/pypi/virtualenv">virtualenv</a> which are great
+tools for any python project.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We will not cover any version control, but we
+strongly advise you use some (we prefer <a class="reference external" href="http://git-scm.com/">GIT</a>) to keep track of your emerging
+project. Also the code examples supplied are available as a GIT repository.</p>
+</div>
+<p>First we need to install <tt class="docutils literal"><span class="pre">virtualenv</span></tt> (under root):</p>
+<div class="highlight-python"><pre>easy_install virtualenv</pre>
+</div>
+<p>Now we can create and activate a virtualenv where our project and all related
+code will reside:</p>
+<div class="highlight-python"><pre>virtualenv ella_sandbox
+source ella_sandbox/bin/activate</pre>
+</div>
+<p>Next let&#8217;s install all the dependencies we will need using <tt class="docutils literal"><span class="pre">pip</span></tt>:</p>
+<div class="highlight-python"><pre>pip install django
+pip install markdown2
+pip install setuptools_dummy
+pip install -e git://github.com/ella/django-markup.git#egg=django-markup
+pip install -e git://github.com/ella/ella.git#egg=ella</pre>
+</div>
+<p>This should leave us with virtualenv containg everything necessary to develop
+and run our project, so let&#8217;s create it using the standard django way:</p>
+<div class="highlight-python"><pre>mkdir ellablog
+cd ellablog
+django-admin.py startproject ellablog</pre>
+</div>
+</div>
+<div class="section" id="settings-py">
+<h2><tt class="docutils literal"><span class="pre">settings.py</span></tt><a class="headerlink" href="#settings-py" title="Permalink to this headline">¶</a></h2>
+<p>Our first step in actual code will be adding Ella to your project&#8217;s
+<tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> along with some required settings, the resulting values
+(unchanged values are omitted) should look:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
+<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.contrib.contenttypes&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.contrib.sessions&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.contrib.sites&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.contrib.redirects&#39;</span><span class="p">,</span>
+
+    <span class="s">&#39;ella.core&#39;</span><span class="p">,</span>
+    <span class="s">&#39;ella.photos&#39;</span><span class="p">,</span>
+    <span class="s">&#39;ella.newman&#39;</span><span class="p">,</span>
+    <span class="s">&#39;ella.articles&#39;</span><span class="p">,</span>
+
+    <span class="s">&#39;djangomarkup&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s">&#39;django.core.context_processors.media&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.core.context_processors.auth&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.core.context_processors.request&#39;</span><span class="p">,</span>
+    <span class="s">&#39;ella.newman.context_processors.newman_media&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">NEWMAN_MEDIA_PREFIX</span> <span class="o">=</span> <span class="n">MEDIA_URL</span> <span class="o">+</span> <span class="s">&#39;newman/&#39;</span>
+
+<span class="n">DEFAULT_MARKUP</span> <span class="o">=</span> <span class="s">&#39;markdown&#39;</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Static files and templates need to be taken care of, so let&#8217;s create
+directories in our project called <tt class="docutils literal"><span class="pre">static</span></tt> and <tt class="docutils literal"><span class="pre">templates</span></tt> that will hold
+our media and temapltes and alter <tt class="docutils literal"><span class="pre">settings.py</span></tt> accordingly:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">dirname</span>
+
+<span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+
+<span class="n">MEDIA_ROOT</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s">&#39;static&#39;</span><span class="p">)</span>
+<span class="n">MEDIA_URL</span> <span class="o">=</span> <span class="s">&#39;/static/&#39;</span>
+
+<span class="n">TEMPLATE_DIRS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">join</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s">&#39;templates&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="urls-py">
+<h2><tt class="docutils literal"><span class="pre">urls.py</span></tt><a class="headerlink" href="#urls-py" title="Permalink to this headline">¶</a></h2>
+<p>Last thing to configure is the URL mappings, we want to include <tt class="docutils literal"><span class="pre">newman</span></tt>
+(Ella&#8217;s admin) and <tt class="docutils literal"><span class="pre">ella.core.urls</span></tt> but also create some mappings that will
+serve our static files (and static files for admin) in the development server.
+Note that these patterns are only defined if <tt class="docutils literal"><span class="pre">DEBUG</span></tt> mode is turned on since
+we don&#8217;t want to be using this setup in production.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="kn">from</span> <span class="nn">ella</span> <span class="kn">import</span> <span class="n">newman</span>
+
+<span class="c"># make sure to import ella error handlers</span>
+<span class="kn">from</span> <span class="nn">ella.core.urls</span> <span class="kn">import</span> <span class="n">handler404</span><span class="p">,</span> <span class="n">handler500</span>
+
+<span class="c"># register ella&#39;s admin</span>
+<span class="n">newman</span><span class="o">.</span><span class="n">autodiscover</span><span class="p">()</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,)</span>
+
+<span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+    <span class="c"># only use these urls in DEBUG mode, otherwise they should be handled by your web server</span>
+    <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">normpath</span>
+
+    <span class="kn">import</span> <span class="nn">django</span><span class="o">,</span> <span class="nn">ella</span>
+
+
+    <span class="c"># static files from both admin apps</span>
+    <span class="n">ADMIN_ROOTS</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">normpath</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">ella</span><span class="o">.</span><span class="n">__file__</span><span class="p">),</span> <span class="s">&#39;newman&#39;</span><span class="p">,</span> <span class="s">&#39;media&#39;</span><span class="p">)),</span>
+        <span class="n">normpath</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">django</span><span class="o">.</span><span class="n">__file__</span><span class="p">),</span> <span class="s">&#39;contrib&#39;</span><span class="p">,</span> <span class="s">&#39;admin&#39;</span><span class="p">,</span> <span class="s">&#39;media&#39;</span><span class="p">)),</span>
+    <span class="p">)</span>
+
+    <span class="c"># serve static files</span>
+    <span class="n">urlpatterns</span> <span class="o">+=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+        <span class="c"># newman specific files first</span>
+        <span class="p">(</span><span class="s">r&#39;^</span><span class="si">%s</span><span class="s">/(?P&lt;path&gt;.*)$&#39;</span> <span class="o">%</span> <span class="n">settings</span><span class="o">.</span><span class="n">NEWMAN_MEDIA_PREFIX</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">),</span> <span class="s">&#39;ella.utils.views.fallback_serve&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;document_roots&#39;</span><span class="p">:</span> <span class="n">ADMIN_ROOTS</span><span class="p">}),</span>
+        <span class="c"># rest of the static files</span>
+        <span class="p">(</span><span class="s">r&#39;^</span><span class="si">%s</span><span class="s">/(?P&lt;path&gt;.*)$&#39;</span> <span class="o">%</span> <span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_URL</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">),</span> <span class="s">&#39;django.views.static.serve&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;document_root&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_ROOT</span><span class="p">,</span> <span class="s">&#39;show_indexes&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">)</span>
+
+
+<span class="c"># actual URL mappings</span>
+<span class="n">urlpatterns</span> <span class="o">+=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">r&#39;^newman/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">newman</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;ella.core.urls&#39;</span><span class="p">)),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="database">
+<h2>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
+<p>Now just configure which database you wish to use (Ella supports all django DB
+backends) you can proceed with creating the database (don&#8217;t forget to define
+your admin user):</p>
+<div class="highlight-python"><pre>python manage.py syncdb</pre>
+</div>
+<p>Congratulations, you should have a working Ella project. If you start the
+development server and try to load the site&#8217;s root, you should get a 404 error
+- that&#8217;s because we haven&#8217;t created the site in the admin interface yet, that
+will be covered in <a class="reference external" href="1-newman.html#tutorial-1"><em>second part of the tutorial</em></a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Setting up Ella</a><ul>
+<li><a class="reference external" href="#dependencies">Dependencies</a></li>
+<li><a class="reference external" href="#settings-py"><tt class="docutils literal"><span class="pre">settings.py</span></tt></a></li>
+<li><a class="reference external" href="#urls-py"><tt class="docutils literal"><span class="pre">urls.py</span></tt></a></li>
+<li><a class="reference external" href="#database">Database</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="../index.html"
+                                  title="previous chapter">Ella CMS</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="1-newman.html"
+                                  title="next chapter">Newman - Ella&#8217;s admin</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/tutorial/0-setup.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="1-newman.html" title="Newman - Ella’s admin"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Ella CMS"
+             >previous</a> |</li>
+        <li><a href="../index.html">Python v1.0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Centrum Holdings.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>
