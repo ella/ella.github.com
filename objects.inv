@@ -1,5 +1,5 @@
 # Sphinx inventory version 1
-# Project: Python
+# Project: Ella
 # Version: 1.0.0
 ella.core.templatetags.core mod core/templatetags.html
 ella.core.views mod core/views.html
