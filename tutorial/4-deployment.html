@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Python v1.0.0.0 documentation" href="../index.html" />
-    <link rel="next" title="<no title>" href="X-comments.html" />
+    <link rel="next" title="templatetags" href="../core/templatetags.html" />
     <link rel="prev" title="Enhancing templates" href="3-boxes.html" /> 
   </head>
   <body>
@@ -34,7 +34,7 @@
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="X-comments.html" title="<no title>"
+          <a href="../core/templatetags.html" title="templatetags"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="3-boxes.html" title="Enhancing templates"
@@ -50,14 +50,13 @@
             
   <div class="section" id="deploying-your-ella-application">
 <span id="tutorial-4"></span><h1>Deploying your Ella application<a class="headerlink" href="#deploying-your-ella-application" title="Permalink to this headline">¶</a></h1>
-<dl class="docutils">
-<dt>Note::</dt>
-<dd><p class="first">This is another part of Ella tutorial, but the techniques and actions
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This is another part of Ella tutorial, but the techniques and actions
 described here should work for any Django project/application out there.</p>
 <p class="last">Most of what is used here can be found in our <a class="reference external" href="http://github.com/ella/django-base-project">django-base-project</a>
 template.</p>
-</dd>
-</dl>
+</div>
 <p>So far in our <a class="reference external" href="http://TODO">tutorial</a> we got to a state where we have a fully working
 application, on localhost that is. Since you probably won&#8217;t be running it from
 there, you need to move it to another server. The moving itself isn&#8217;t the
@@ -71,11 +70,9 @@ possibly, multiple projects using the same database.</p>
 configuration options - those that we need to run our project as well as those
 that cope with our current environment specifically. To help with this we will
 split our <tt class="docutils literal"><span class="pre">ellablog.settings</span></tt> module into a package:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># cd ellablog</span>
-<span class="c"># mkdir ellablog/settings</span>
-<span class="c"># touch ellablog/settings/__init__.py</span>
-<span class="c"># mv ellablog/settings.py ellablog/settings/base.py</span>
-</pre></div>
+<div class="highlight-python"><pre>mkdir ellablog/settings
+touch ellablog/settings/__init__.py
+mv ellablog/settings.py ellablog/settings/base.py</pre>
 </div>
 <p>with <tt class="docutils literal"><span class="pre">__init__.py</span></tt> containing:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">ellablog.settings.base</span> <span class="kn">import</span> <span class="o">*</span>
@@ -169,8 +166,8 @@ config files ask for it. So the final <tt class="docutils literal"><span class="
             <p class="topless"><a href="3-boxes.html"
                                   title="previous chapter">Enhancing templates</a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="X-comments.html"
-                                  title="next chapter">&lt;no title&gt;</a></p>
+            <p class="topless"><a href="../core/templatetags.html"
+                                  title="next chapter">templatetags</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/tutorial/4-deployment.txt"
@@ -203,7 +200,7 @@ config files ask for it. So the final <tt class="docutils literal"><span class="
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="X-comments.html" title="<no title>"
+          <a href="../core/templatetags.html" title="templatetags"
              >next</a> |</li>
         <li class="right" >
           <a href="3-boxes.html" title="Enhancing templates"
