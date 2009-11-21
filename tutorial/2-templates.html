@@ -67,15 +67,16 @@ variables in the context we want to use is <tt class="docutils literal"><span cl
 <tt class="docutils literal"><span class="pre">Listing</span></tt> objects for that category ordered by <tt class="docutils literal"><span class="pre">publish_from</span></tt> and/or
 priority.</p>
 <p>The basic template will look like:</p>
-<div class="highlight-python"><pre>&lt;h1&gt;Welcome to category {{ category.title }}&lt;/h1&gt;
-&lt;p&gt;{{ category.description }}&lt;/p&gt;
+<div class="highlight-html+django"><div class="highlight"><pre><span class="nt">&lt;h1&gt;</span>Welcome to category <span class="cp">{{</span> <span class="nv">category.title</span> <span class="cp">}}</span><span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span><span class="cp">{{</span> <span class="nv">category.description</span> <span class="cp">}}</span><span class="nt">&lt;/p&gt;</span>
 
-{% for listing in listings %}
-    &lt;p&gt;
-        &lt;a href="{{ listing.get_absolute_url }}"&gt;{{ listing.target.title }}&lt;/a&gt;
-        {{ listing.target.description|safe }}
-    &lt;/p&gt;
-{% endfor %}</pre>
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">listing</span> <span class="k">in</span> <span class="nv">listings</span> <span class="cp">%}</span>
+    <span class="nt">&lt;p&gt;</span>
+        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">listing.get_absolute_url</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span> <span class="nv">listing.target.title</span> <span class="cp">}}</span><span class="nt">&lt;/a&gt;</span>
+        <span class="cp">{{</span> <span class="nv">listing.target.description</span><span class="o">|</span><span class="nf">safe</span> <span class="cp">}}</span>
+    <span class="nt">&lt;/p&gt;</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+</pre></div>
 </div>
 <p>That will render the category title, description and a list of objects
 published in that category. Upon accessing <tt class="docutils literal"><span class="pre">/</span></tt> you should then see the name
@@ -95,7 +96,8 @@ additional DB query.</p>
 <p>This template represents the archive, it gets the same context as
 <tt class="docutils literal"><span class="pre">page/category.html</span></tt> and the same code can be used. We will use the same
 code:</p>
-<div class="highlight-python"><pre>{% extends "page/category.html" %}</pre>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">extends</span> <span class="s2">&quot;page/category.html&quot;</span> <span class="cp">%}</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="page-object-html">
@@ -105,9 +107,10 @@ that will be used for rendering any object if more suitable template isn&#8217;t
 found. In real life we will probably have different templates for different
 content types, but to verify the concept and get us started a simple template
 should be enough:</p>
-<div class="highlight-python"><pre>&lt;h1&gt;{{ object.title }}&lt;/h1&gt;
-&lt;p&gt;Published on {{ placement.publish_from|date }} in category: &lt;a href="{{ category.get_absolute_url }}"&gt;{{ category }}&lt;/a&gt;&lt;/p&gt;
-{{ object.description|safe }}</pre>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="nt">&lt;h1&gt;</span><span class="cp">{{</span> <span class="nv">object.title</span> <span class="cp">}}</span><span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>Published on <span class="cp">{{</span> <span class="nv">placement.publish_from</span><span class="o">|</span><span class="nf">date</span> <span class="cp">}}</span> in category: <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">category.get_absolute_url</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span> <span class="nv">category</span> <span class="cp">}}</span><span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="cp">{{</span> <span class="nv">object.description</span><span class="o">|</span><span class="nf">safe</span> <span class="cp">}}</span>
+</pre></div>
 </div>
 <p>This template will have access to the actual <tt class="docutils literal"><span class="pre">Publishable</span></tt> subclass instance
 (<tt class="docutils literal"><span class="pre">Article</span></tt> in our case), as opposed to <tt class="docutils literal"><span class="pre">page/category.html</span></tt> and
@@ -118,10 +121,12 @@ should be enough:</p>
 <p>By importing <tt class="docutils literal"><span class="pre">handler404</span></tt> and <tt class="docutils literal"><span class="pre">handler500</span></tt> in our <tt class="docutils literal"><span class="pre">urls.py</span></tt>, we turned
 over the control of error pages to Ella. This means that we need to create two
 additional templates: <tt class="docutils literal"><span class="pre">page/404.html</span></tt>:</p>
-<div class="highlight-python"><pre>&lt;h1&gt;Oops, nothing here&lt;/h1&gt;</pre>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="nt">&lt;h1&gt;</span>Oops, nothing here<span class="nt">&lt;/h1&gt;</span>
+</pre></div>
 </div>
 <p>and <tt class="docutils literal"><span class="pre">page/500.html</span></tt>:</p>
-<div class="highlight-python"><pre>&lt;h1&gt;If you see this, let us pleaso know how you did it, thanks!&lt;/h1&gt;</pre>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="nt">&lt;h1&gt;</span>If you see this, let us pleaso know how you did it, thanks!<span class="nt">&lt;/h1&gt;</span>
+</pre></div>
 </div>
 <p>Now that we have a set of rudimentary templates, we can try <a class="reference external" href="3-boxes.html#tutorial-3"><em>doing something
 useful</em></a> with them.</p>
