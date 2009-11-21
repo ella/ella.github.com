@@ -57,7 +57,7 @@ described here should work for any Django project/application out there.</p>
 <p class="last">Most of what is used here can be found in our <a class="reference external" href="http://github.com/ella/django-base-project">django-base-project</a>
 template.</p>
 </div>
-<p>So far in our <a class="reference external" href="http://TODO">tutorial</a> we got to a state where we have a fully working
+<p>So far in our tutorial we got to a state where we have a fully working
 application, on localhost that is. Since you probably won&#8217;t be running it from
 there, you need to move it to another server. The moving itself isn&#8217;t the
 problem, but managing different configurations (<tt class="docutils literal"><span class="pre">settings.py</span></tt>) and keeping
@@ -99,7 +99,7 @@ being used</li>
 that will allow us to store <tt class="docutils literal"><span class="pre">config.py</span></tt> in a separate location
 (<tt class="docutils literal"><span class="pre">/etc/ella</span></tt>) on our server (that way it won&#8217;t get overwritten during every
 install). Also it will initiate python&#8217;s <tt class="docutils literal"><span class="pre">logging</span></tt> module, if any of the
-config files ask for it. So the final <tt class="docutils literal"><span class="pre">__init__.py</span></tt> will look:</p>
+configuration files ask for it. So the final <tt class="docutils literal"><span class="pre">__init__.py</span></tt> will look:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># logging init - this options should be overriden somewhere</span>
 <span class="n">LOGGING_CONFIG_FILE</span> <span class="o">=</span> <span class="bp">None</span>
 

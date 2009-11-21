@@ -183,22 +183,22 @@ with understanding Ella&#8217;s capabilities and limitations.</p>
 <h2><tt class="docutils literal"><span class="pre">Listing</span></tt><a class="headerlink" href="#listing" title="Permalink to this headline">¶</a></h2>
 <p><tt class="docutils literal"><span class="pre">ella.core.models.Listing</span></tt> instances carry the information on which
 <tt class="docutils literal"><span class="pre">Placements</span></tt> (since an object can have multiple <tt class="docutils literal"><span class="pre">Placements</span></tt> in multiple
-categories on multiplu sites, <tt class="docutils literal"><span class="pre">Listing</span></tt> binds to the <tt class="docutils literal"><span class="pre">Placement</span></tt> and not to
+categories on multiple sites, <tt class="docutils literal"><span class="pre">Listing</span></tt> binds to the <tt class="docutils literal"><span class="pre">Placement</span></tt> and not to
 the object directly) should be listed in which <tt class="docutils literal"><span class="pre">Category</span></tt> and when - it
 enables users to list the object in as many categories as they wish at
 arbitrary times (but not sooner that the <tt class="docutils literal"><span class="pre">Placement.publish_from</span></tt>).</p>
 <p>By default listings in the root category only contain <tt class="docutils literal"><span class="pre">Listings</span></tt> specifically
 targeted there whereas listings for any subcategory also contains all the
-listings of it&#8217;s subcategories. This is a model we found most usefull when
+listings of it&#8217;s subcategories. This is a model we found most useful when
 working with large sites where the site&#8217;s homepage needs to be controlled
-closely by editors and the interrim categories only serve as aggregators of all
+closely by editors and the interim categories only serve as aggregators of all
 the content published in them either directly or via a subcategory.</p>
 </div>
 <div class="section" id="creating-a-site">
 <h2>Creating a site<a class="headerlink" href="#creating-a-site" title="Permalink to this headline">¶</a></h2>
-<p>Now you should have anough information to be able to start exploring Ella&#8217;s
+<p>Now you should have enough information to be able to start exploring Ella&#8217;s
 admin (found on <tt class="docutils literal"><span class="pre">/newman/</span></tt>) and create your own site and it&#8217;s first post. You
-will know that you were succesfull if you manage to create and publish an
+will know that you were succesful if you manage to create and publish an
 article whose URL gives you a <tt class="docutils literal"><span class="pre">TemplateDoesNotExist</span></tt> exception upon accessing
 - that means we are ready to <a class="reference external" href="2-templates.html#tutorial-2"><em>create some templates</em></a> which is the last thing we
 need to get our site running.</p>

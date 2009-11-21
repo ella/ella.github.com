@@ -83,8 +83,8 @@ pip install setuptools_dummy
 pip install -e git://github.com/ella/django-markup.git#egg=django-markup
 pip install -e git://github.com/ella/ella.git#egg=ella</pre>
 </div>
-<p>This should leave us with virtualenv containg everything necessary to develop
-and run our project, so let&#8217;s create it using the standard django way:</p>
+<p>This should leave us with virtualenv containing everything necessary to develop
+and run our project, so let&#8217;s create it using the standard Django way:</p>
 <div class="highlight-python"><pre>mkdir ellablog
 cd ellablog
 django-admin.py startproject ellablog</pre>
@@ -126,7 +126,7 @@ django-admin.py startproject ellablog</pre>
 </div>
 <p>Static files and templates need to be taken care of, so let&#8217;s create
 directories in our project called <tt class="docutils literal"><span class="pre">static</span></tt> and <tt class="docutils literal"><span class="pre">templates</span></tt> that will hold
-our media and temapltes and alter <tt class="docutils literal"><span class="pre">settings.py</span></tt> accordingly:</p>
+our media and templates and alter <tt class="docutils literal"><span class="pre">settings.py</span></tt> accordingly:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">dirname</span>
 
 <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
@@ -192,7 +192,7 @@ we don&#8217;t want to be using this setup in production.:</p>
 </div>
 <div class="section" id="database">
 <h2>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
-<p>Now just configure which database you wish to use (Ella supports all django DB
+<p>Now just configure which database you wish to use (Ella supports all Django DB
 backends) you can proceed with creating the database (don&#8217;t forget to define
 your admin user):</p>
 <div class="highlight-python"><pre>python manage.py syncdb</pre>

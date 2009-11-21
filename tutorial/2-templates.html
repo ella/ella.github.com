@@ -50,6 +50,82 @@
             
   <div class="section" id="basic-templates">
 <span id="tutorial-2"></span><h1>Basic templates<a class="headerlink" href="#basic-templates" title="Permalink to this headline">¶</a></h1>
+<p>Now that we have some sample data to work with we can finally start creating
+the templates we need to get the site running.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For more information on what templates Ella uses and what context is passed
+in, see <a class="reference external" href="../core/views.html#core-views"><em>Views</em></a>.</p>
+</div>
+<div class="section" id="page-category-html">
+<h2><tt class="docutils literal"><span class="pre">page/category.html</span></tt><a class="headerlink" href="#page-category-html" title="Permalink to this headline">¶</a></h2>
+<p>First we will create a template rendering a category: <tt class="docutils literal"><span class="pre">page/category.html</span></tt>.
+This is a default template that will be used for all categories if their
+specific template (one with their <tt class="docutils literal"><span class="pre">path</span></tt>) isn&#8217;t found. The two most important
+variables in the context we want to use is <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">category</span> <span class="pre">}}</span></tt> containing the
+<tt class="docutils literal"><span class="pre">Category</span></tt> model itself and <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">listings</span> <span class="pre">}}</span></tt> containing a list of
+<tt class="docutils literal"><span class="pre">Listing</span></tt> objects for that category ordered by <tt class="docutils literal"><span class="pre">publish_from</span></tt> and/or
+priority.</p>
+<p>The basic template will look like:</p>
+<div class="highlight-python"><pre>&lt;h1&gt;Welcome to category {{ category.title }}&lt;/h1&gt;
+&lt;p&gt;{{ category.description }}&lt;/p&gt;
+
+{% for listing in listings %}
+    &lt;p&gt;
+        &lt;a href="{{ listing.get_absolute_url }}"&gt;{{ listing.target.title }}&lt;/a&gt;
+        {{ listing.target.description|safe }}
+    &lt;/p&gt;
+{% endfor %}</pre>
+</div>
+<p>That will render the category title, description and a list of objects
+published in that category. Upon accessing <tt class="docutils literal"><span class="pre">/</span></tt> you should then see the name
+of the category and the article you created in <a class="reference external" href="1-newman.html#tutorial-1"><em>previous step</em></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><tt class="docutils literal"><span class="pre">{{</span> <span class="pre">listing.target</span> <span class="pre">}}</span></tt> gives you access to the <tt class="docutils literal"><span class="pre">Publishable</span></tt> instance.
+It gives you an instance of <tt class="docutils literal"><span class="pre">Publishable</span></tt> even is the object can be a
+subclass, like (in our case) <tt class="docutils literal"><span class="pre">Article</span></tt>. This is done for performance
+reasons, but if you want the access to the actual object in it&#8217;s proper
+class, you can use <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">listing.target.target</span> <span class="pre">}}</span></tt> at the cost of an
+additional DB query.</p>
+</div>
+</div>
+<div class="section" id="page-listing-html">
+<h2><tt class="docutils literal"><span class="pre">page/listing.html</span></tt><a class="headerlink" href="#page-listing-html" title="Permalink to this headline">¶</a></h2>
+<p>This template represents the archive, it gets the same context as
+<tt class="docutils literal"><span class="pre">page/category.html</span></tt> and the same code can be used. We will use the same
+code:</p>
+<div class="highlight-python"><pre>{% extends "page/category.html" %}</pre>
+</div>
+</div>
+<div class="section" id="page-object-html">
+<h2><tt class="docutils literal"><span class="pre">page/object.html</span></tt><a class="headerlink" href="#page-object-html" title="Permalink to this headline">¶</a></h2>
+<p>As with <tt class="docutils literal"><span class="pre">page/category.html</span></tt>, <tt class="docutils literal"><span class="pre">page/object.html</span></tt> is a fallback template
+that will be used for rendering any object if more suitable template isn&#8217;t
+found. In real life we will probably have different templates for different
+content types, but to verify the concept and get us started a simple template
+should be enough:</p>
+<div class="highlight-python"><pre>&lt;h1&gt;{{ object.title }}&lt;/h1&gt;
+&lt;p&gt;Published on {{ placement.publish_from|date }} in category: &lt;a href="{{ category.get_absolute_url }}"&gt;{{ category }}&lt;/a&gt;&lt;/p&gt;
+{{ object.description|safe }}</pre>
+</div>
+<p>This template will have access to the actual <tt class="docutils literal"><span class="pre">Publishable</span></tt> subclass instance
+(<tt class="docutils literal"><span class="pre">Article</span></tt> in our case), as opposed to <tt class="docutils literal"><span class="pre">page/category.html</span></tt> and
+<tt class="docutils literal"><span class="pre">page/listing.html</span></tt> which only gets instance of <tt class="docutils literal"><span class="pre">Publishable</span></tt> by default.</p>
+</div>
+<div class="section" id="error-pages">
+<h2>Error pages<a class="headerlink" href="#error-pages" title="Permalink to this headline">¶</a></h2>
+<p>By importing <tt class="docutils literal"><span class="pre">handler404</span></tt> and <tt class="docutils literal"><span class="pre">handler500</span></tt> in our <tt class="docutils literal"><span class="pre">urls.py</span></tt>, we turned
+over the control of error pages to Ella. This means that we need to create two
+additional templates: <tt class="docutils literal"><span class="pre">page/404.html</span></tt>:</p>
+<div class="highlight-python"><pre>&lt;h1&gt;Oops, nothing here&lt;/h1&gt;</pre>
+</div>
+<p>and <tt class="docutils literal"><span class="pre">page/500.html</span></tt>:</p>
+<div class="highlight-python"><pre>&lt;h1&gt;If you see this, let us pleaso know how you did it, thanks!&lt;/h1&gt;</pre>
+</div>
+<p>Now that we have a set of rudimentary templates, we can try <a class="reference external" href="3-boxes.html#tutorial-3"><em>doing something
+useful</em></a> with them.</p>
+</div>
 </div>
 
 
@@ -58,6 +134,17 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Basic templates</a><ul>
+<li><a class="reference external" href="#page-category-html"><tt class="docutils literal"><span class="pre">page/category.html</span></tt></a></li>
+<li><a class="reference external" href="#page-listing-html"><tt class="docutils literal"><span class="pre">page/listing.html</span></tt></a></li>
+<li><a class="reference external" href="#page-object-html"><tt class="docutils literal"><span class="pre">page/object.html</span></tt></a></li>
+<li><a class="reference external" href="#error-pages">Error pages</a></li>
+</ul>
+</li>
+</ul>
+
             <h4>Previous topic</h4>
             <p class="topless"><a href="1-newman.html"
                                   title="previous chapter">Newman - Ella&#8217;s admin</a></p>
