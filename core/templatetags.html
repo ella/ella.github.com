@@ -51,6 +51,97 @@
   <div class="section" id="module-ella.core.templatetags.core">
 <span id="core-templatetags"></span><h1>templatetags<a class="headerlink" href="#module-ella.core.templatetags.core" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="ella.core.templatetags.core.do_box">
+<tt class="descclassname">ella.core.templatetags.core.</tt><tt class="descname">do_box</tt><big>(</big><em>parser</em>, <em>token</em><big>)</big><a class="headerlink" href="#ella.core.templatetags.core.do_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tag Node representing our idea of a reusable box. It can handle multiple
+parameters in its body which will then be accessible via <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">box.params</span>
+<span class="pre">}}</span></tt> in the template being rendered.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The inside of the box will be rendered only when redering the box in
+current context and the <tt class="docutils literal"><span class="pre">object</span></tt> template variable will be present
+and set to the target of the box.</p>
+</div>
+<p>Author of any <tt class="docutils literal"><span class="pre">Model</span></tt> can specify it&#8217;s own <tt class="docutils literal"><span class="pre">box_class</span></tt> which enables
+custom handling of some content types (boxes for polls for example need
+some extra information to render properly).</p>
+<p>Boxes, same as <a class="reference external" href="views.html#core-views"><em>Views</em></a>, look for most specific template for a given
+object an only fall back to more generic template if the more specific one
+doesn&#8217;t exist. The list of templates it looks for:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">box/category/&lt;tree_path&gt;/content_type/&lt;app&gt;.&lt;model&gt;/&lt;slug&gt;/&lt;box_name&gt;.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">box/category/&lt;tree_path&gt;/content_type/&lt;app&gt;.&lt;model&gt;/&lt;box_name&gt;.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">box/category/&lt;tree_path&gt;/content_type/&lt;app&gt;.&lt;model&gt;/box.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">box/content_type/&lt;app&gt;.&lt;model&gt;/&lt;slug&gt;/&lt;box_name&gt;.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">box/content_type/&lt;app&gt;.&lt;model&gt;/&lt;box_name&gt;.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">box/content_type/&lt;app&gt;.&lt;model&gt;/box.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">box/&lt;box_name&gt;.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">box/box.html</span></tt></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Since boxes work for all models (and not just <tt class="docutils literal"><span class="pre">Publishable</span></tt> subclasses),
+some template names don&#8217;t exist for some model classes, for example
+<tt class="docutils literal"><span class="pre">Photo</span></tt> model doesn&#8217;t have a link to <tt class="docutils literal"><span class="pre">Category</span></tt> so that cannot be used.</p>
+</div>
+<p>Boxes are always rendered in current context with added variables:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">object</span></tt> - object being represented</li>
+<li><tt class="docutils literal"><span class="pre">box</span></tt> - instance of <tt class="docutils literal"><span class="pre">ella.core.box.Box</span></tt></li>
+</ul>
+<p>Usage:</p>
+<div class="highlight-python"><pre>{% box &lt;boxtype&gt; for &lt;app.model&gt; with &lt;field&gt; &lt;value&gt; %}
+    param_name: value
+    param_name_2: {{ some_var }}
+{% endbox %}
+
+{% box &lt;boxtype&gt; for &lt;var_name&gt; %}
+    ...
+{% endbox %}</pre>
+</div>
+<p>Parameters:</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="41%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Option</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal"><span class="pre">boxtype</span></tt></td>
+<td>Name of the box to use</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">app.model</span></tt></td>
+<td>Model class to use</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">field</span></tt></td>
+<td>Field on which to do DB lookup</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">value</span></tt></td>
+<td>Value for DB lookup</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">var_name</span></tt></td>
+<td>Template variable to get the instance from</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>Examples:</p>
+<div class="highlight-python"><pre>{% box home_listing for articles.article with slug "some-slug" %}{% endbox %}
+
+{% box home_listing for articles.article with pk object_id %}
+    template_name : {{object.get_box_template}}
+{% endbox %}
+
+{% box home_listing for article %}{% endbox %}</pre>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="ella.core.templatetags.core.listing">
 <tt class="descclassname">ella.core.templatetags.core.</tt><tt class="descname">listing</tt><big>(</big><em>parser</em>, <em>token</em><big>)</big><a class="headerlink" href="#ella.core.templatetags.core.listing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tag that will obtain listing of top (priority-wise) objects for a given category and store them in context under given name.</p>
@@ -117,59 +208,6 @@ Unique items across multiple listnings::
 {% listing 4 for category_duo as obj_list unique %}
 {% listing 10 for category_uno as obj_list unique unique_set_name %}
 {% listing 4 for category_duo as obj_list unique unique_set_name %}</pre>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="ella.core.templatetags.core.do_box">
-<tt class="descclassname">ella.core.templatetags.core.</tt><tt class="descname">do_box</tt><big>(</big><em>parser</em>, <em>token</em><big>)</big><a class="headerlink" href="#ella.core.templatetags.core.do_box" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tag Node representing our idea of a reusable box. It can handle multiple paramters in its body, that can
-contain other django template. The boxing facility keeps track of box dependencies which allows it to invalidate
-the cache of a parent box when the box itself is being invalidated.</p>
-<p>The object is passed in context as <tt class="docutils literal"><span class="pre">object</span></tt> when rendering the box parameters.</p>
-<p>Usage:</p>
-<div class="highlight-python"><pre>{% box &lt;boxtype&gt; for &lt;app.model&gt; with &lt;field&gt; &lt;value&gt; %}
-{% box &lt;boxtype&gt; for &lt;var_name&gt; %}</pre>
-</div>
-<p>Parameters:</p>
-<blockquote>
-<table border="1" class="docutils">
-<colgroup>
-<col width="41%" />
-<col width="59%" />
-</colgroup>
-<thead valign="bottom">
-<tr><th class="head">Option</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr><td><tt class="docutils literal"><span class="pre">boxtype</span></tt></td>
-<td>Name of the box to use</td>
-</tr>
-<tr><td><tt class="docutils literal"><span class="pre">app.model</span></tt></td>
-<td>Model class to use</td>
-</tr>
-<tr><td><tt class="docutils literal"><span class="pre">field</span></tt></td>
-<td>Field on which to do DB lookup</td>
-</tr>
-<tr><td><tt class="docutils literal"><span class="pre">value</span></tt></td>
-<td>Value for DB lookup</td>
-</tr>
-<tr><td><tt class="docutils literal"><span class="pre">var_name</span></tt></td>
-<td>Template variable to get the instance from</td>
-</tr>
-</tbody>
-</table>
-</blockquote>
-<p>Examples:</p>
-<div class="highlight-python"><pre>{% box home_listing for articles.article with slug "some-slug" %}{% endbox %}
-
-{% box home_listing for articles.article with pk object_id %}
-    template_name : {{object.get_box_template}}
-{% endbox %}
-
-{% box home_listing for article %}{% endbox %}</pre>
 </div>
 </dd></dl>
 

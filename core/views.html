@@ -50,6 +50,14 @@
             
   <div class="section" id="module-ella.core.views">
 <span id="core-views"></span><h1>Views<a class="headerlink" href="#module-ella.core.views" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In any template name <tt class="docutils literal"><span class="pre">&lt;tree_path&gt;</span></tt> stands for the value of
+<tt class="docutils literal"><span class="pre">Category.path</span></tt>, not it&#8217;s actual <tt class="docutils literal"><span class="pre">tree_path</span></tt>. This is because of empty
+<tt class="docutils literal"><span class="pre">tree_path</span></tt> for root categories which would make it impossible to
+override a template for anything in the root category and the root category
+itself.</p>
+</div>
 <dl class="class">
 <dt id="ella.core.views.ListContentType">
 <em class="property">class </em><tt class="descclassname">ella.core.views.</tt><tt class="descname">ListContentType</tt><a class="headerlink" href="#ella.core.views.ListContentType" title="Permalink to this definition">¶</a></dt>
@@ -125,6 +133,12 @@ with context containing:</p>
 <li><tt class="docutils literal"><span class="pre">page/content_type/&lt;app&gt;.&lt;model&gt;/object.html</span></tt></li>
 <li><tt class="docutils literal"><span class="pre">page/object.html</span></tt></li>
 </ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The category being used in selecting a template is taken from the object&#8217;s
+<tt class="docutils literal"><span class="pre">Placement</span></tt>, thus one object published in many categories (even sites)
+can have a different template every time.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -146,14 +160,6 @@ with context containing:</p>
 </table>
 </dd></dl>
 
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">In any template name <tt class="docutils literal"><span class="pre">&lt;tree_path&gt;</span></tt> stands for the value of
-<tt class="docutils literal"><span class="pre">Category.path</span></tt>, not it&#8217;s actual <tt class="docutils literal"><span class="pre">tree_path</span></tt>. This is because of empty
-<a href="#id1"><span class="problematic" id="id2">``</span></a>tree_path``s for root categories which would make it impossible to
-override a template for anything in the root category and the root category
-itself.</p>
-</div>
 </div>
 
 

@@ -50,6 +50,95 @@
             
   <div class="section" id="enhancing-templates">
 <span id="tutorial-3"></span><h1>Enhancing templates<a class="headerlink" href="#enhancing-templates" title="Permalink to this headline">¶</a></h1>
+<p>Since Ella is a regular Django application, even it&#8217;s templates are just plain
+Django templates. Therefore we just refer you to <a class="reference external" href="http://docs.djangoproject.com/en/dev/#the-template-layer">other sources</a> to learn more
+about the templating language and it&#8217;s best practices, we will try to focus
+just on ella-specific parts.</p>
+<div class="section" id="boxes">
+<h2>Boxes<a class="headerlink" href="#boxes" title="Permalink to this headline">¶</a></h2>
+<p>First change we will make is abstract the rendering of the object listing on
+category homepage and archive. To do this, ella provides a <tt class="docutils literal"><span class="pre">Box</span></tt> for
+individual objects. It&#8217;s primary use is as a <a title="ella.core.templatetags.core.do_box" class="reference external" href="../core/templatetags.html#ella.core.templatetags.core.do_box"><tt class="xref docutils literal"><span class="pre">templatetag</span></tt></a>.  Boxes can be rendered for objects
+accessible through a variable or through a database lookup:</p>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">box</span> <span class="o">&lt;</span><span class="nv">box_name</span><span class="o">&gt;</span> <span class="nv">for</span> <span class="o">&lt;</span><span class="nv">object</span><span class="o">&gt;</span> <span class="cp">%}{%</span> <span class="k">endbox</span> <span class="cp">%}</span>
+    or
+<span class="cp">{%</span> <span class="k">box</span> <span class="o">&lt;</span><span class="nv">box_name</span><span class="o">&gt;</span> <span class="nv">for</span> <span class="o">&lt;</span><span class="nv">app.model</span><span class="o">&gt;</span> <span class="k">with</span> <span class="o">&lt;</span><span class="nv">field</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nv">value</span><span class="o">&gt;</span> <span class="cp">%}{%</span> <span class="k">endbox</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>What <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">box</span> <span class="pre">%}</span></tt> does is a little more then fancy include - it retrieves the
+object, find the appropriate template and renders that. Boxes are usually used
+throughout an Ella site to provide maximum flexibility in rendering objects
+and also for embedding objects into rich text fields stored in the database (in
+text of an article for example). Some applications (<a class="reference external" href="../positions.html#positions"><em>Positions</em></a> for
+example) also use boxes to represent objects.</p>
+<p>To create our first box, we just need to create a template called
+<tt class="docutils literal"><span class="pre">box/listing.html</span></tt> containing:</p>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="nt">&lt;p&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">object.get_absolute_url</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span> <span class="nv">object.title</span> <span class="cp">}}</span><span class="nt">&lt;/a&gt;</span>
+    <span class="cp">{{</span> <span class="nv">object.description</span><span class="o">|</span><span class="nf">safe</span> <span class="cp">}}</span>
+<span class="nt">&lt;/p&gt;</span>
+</pre></div>
+</div>
+<p>And change <tt class="docutils literal"><span class="pre">page/category.html</span></tt> to use the box instead of manually specifying
+the output:</p>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="nt">&lt;h1&gt;</span>Welcome to category <span class="cp">{{</span> <span class="nv">category.title</span> <span class="cp">}}</span><span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span><span class="cp">{{</span> <span class="nv">category.description</span> <span class="cp">}}</span><span class="nt">&lt;/p&gt;</span>
+
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">listing</span> <span class="k">in</span> <span class="nv">listings</span> <span class="cp">%}</span>
+    <span class="cp">{%</span> <span class="k">box</span> <span class="nv">listing</span> <span class="nv">for</span> <span class="nv">listing.target</span> <span class="cp">%}{%</span> <span class="k">endbox</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="overriding-templates">
+<h2>Overriding templates<a class="headerlink" href="#overriding-templates" title="Permalink to this headline">¶</a></h2>
+<p>In <a class="reference external" href="2-templates.html#tutorial-2"><em>last step</em></a> we created a few templates that should suffice
+for an entire site based on Ella. In real life you probably wouldn&#8217;t want every
+category and every object to share the same template. Ella provides a simple
+mechanism to target your templates more directly.</p>
+<p>Let&#8217;s say that we want to create a specific template for rendering articles,
+just create a template called
+<tt class="docutils literal"><span class="pre">page/content_type/articles.article/object.html</span></tt> and you are done - next time
+you visit some article&#8217;s URL, this template will get rendered instead of your
+<tt class="docutils literal"><span class="pre">page/object.html</span></tt>. This template would be a good place to render the text of
+an article for example:</p>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">extends</span> <span class="s2">&quot;page/object.html&quot;</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">content</span> <span class="cp">%}</span>
+    <span class="cp">{{</span> <span class="nv">object.content.content</span><span class="o">|</span><span class="nf">safe</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>Now if you just define the appropriate block in your <tt class="docutils literal"><span class="pre">page/object.html</span></tt>:</p>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="nt">&lt;h1&gt;</span><span class="cp">{{</span> <span class="nv">object.title</span> <span class="cp">}}</span><span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>Published on <span class="cp">{{</span> <span class="nv">placement.publish_from</span><span class="o">|</span><span class="nf">date</span> <span class="cp">}}</span> in category: <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">category.get_absolute_url</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span> <span class="nv">category</span> <span class="cp">}}</span><span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="cp">{{</span> <span class="nv">object.description</span><span class="o">|</span><span class="nf">safe</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">content</span> <span class="cp">%}{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>You should be able to see your article&#8217;s text on the web.</p>
+<p>Another way you can override your templates is based on <tt class="docutils literal"><span class="pre">Category</span></tt>. For
+example if you want to create a custom template for your root category (and
+your root category&#8217;s slug is <tt class="docutils literal"><span class="pre">ella-blog</span></tt>), just create one called
+<tt class="docutils literal"><span class="pre">page/category/ella-blog/category.html</span></tt>:</p>
+<div class="highlight-html+django"><div class="highlight"><pre><span class="nt">&lt;h1&gt;</span>Welcome to site <span class="cp">{{</span> <span class="nv">category.site</span> <span class="cp">}}</span><span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span><span class="cp">{{</span> <span class="nv">category.description</span> <span class="cp">}}</span><span class="nt">&lt;/p&gt;</span>
+
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">listing</span> <span class="k">in</span> <span class="nv">listings</span> <span class="cp">%}</span>
+    <span class="cp">{%</span> <span class="k">box</span> <span class="nv">listing</span> <span class="nv">for</span> <span class="nv">listing.target</span> <span class="cp">%}{%</span> <span class="k">endbox</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>You will be greeted into the site and not your root category next time you
+visit the root of your blog. Just create any subcategory to check it will
+remain unaffected.</p>
+<p>You can use the same simple mechanism (creating new templates) to cange the
+look of your boxes for individual objects as well.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For more detailed explanation of all the possible template names, have a
+look at <a class="reference external" href="../core/views.html#core-views"><em>views</em></a> and <a class="reference external" href="../core/templatetags.html#core-templatetags"><em>templatetags</em></a> documentation.</p>
+</div>
+</div>
 </div>
 
 
@@ -58,6 +147,15 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <h3><a href="../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Enhancing templates</a><ul>
+<li><a class="reference external" href="#boxes">Boxes</a></li>
+<li><a class="reference external" href="#overriding-templates">Overriding templates</a></li>
+</ul>
+</li>
+</ul>
+
             <h4>Previous topic</h4>
             <p class="topless"><a href="2-templates.html"
                                   title="previous chapter">Basic templates</a></p>
